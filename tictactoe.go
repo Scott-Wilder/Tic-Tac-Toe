@@ -65,8 +65,8 @@ func takeTurn(gameBoard *[3][3]string, player1 *player, player2 *player) [3][3]s
 		fmt.Scan(&move[1])
 		var x = move[0]
 		var y = move[1]
+		fmt.Printf("%s move [%d][%d]\n", player1.name,x,y)
 		if (validMove(move, gameBoard, &x, &y) == true) {
-			fmt.Printf("%s move [%d][%d]\n", player1.name,x,y)
 			gameBoard[x][y] = player1.piece
 			printGameBoard(gameBoard)
 			if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
@@ -82,8 +82,8 @@ func takeTurn(gameBoard *[3][3]string, player1 *player, player2 *player) [3][3]s
 					// random number between 0-2 for both x,y.
 					var x = rand.Intn(max - min + 1) + min
 					var y = rand.Intn(max - min + 1) + min
+					fmt.Printf("NPC move [%d][%d]\n", x,y)
 					if (validMove(move, gameBoard, &x, &y) == true) {
-						fmt.Printf("NPC move [%d][%d]\n", x,y)
 						gameBoard[x][y] = player2.piece
 						printGameBoard(gameBoard)
 						if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
@@ -101,8 +101,8 @@ func takeTurn(gameBoard *[3][3]string, player1 *player, player2 *player) [3][3]s
 					fmt.Scan(&move[1])
 					var x = move[0]
 					var y = move[1]
+					fmt.Printf("%s move [%d][%d]\n", player2.name,x,y)
 					if (validMove(move, gameBoard, &x, &y) == true) {
-						fmt.Printf("%s move [%d][%d]\n", player2.name,x,y)
 						gameBoard[x][y] = player2.piece
 						printGameBoard(gameBoard)
 						if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
