@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 type player struct {
 	name string
 	winner bool
 	piece string
+	npc bool
 }
 
 func main() {
@@ -25,7 +28,6 @@ func collectPlayersName() [2]string {
 	var players [2]string
 	fmt.Println("Player 1, please enter your Name:")
 	fmt.Scan(&player1)
-	//todo: implement npc logic
 	fmt.Println("Player 2, please enter your Name or type NPC:")
 	fmt.Scan(&player2)
 	players[0] = player1
@@ -34,8 +36,11 @@ func collectPlayersName() [2]string {
 }
 
 func newPlayer(players *[2]string) (*player, *player) {
-	var player1 = player{players[0], false, "X"}
-	var player2 = player{players[1], false, "O"}
+	var player1 = player{players[0], false, "X", false}
+	var player2 = player{players[1], false, "O", false}
+	if(players[1] == "NPC") {
+		player2 = player{players[1], false, "O", true}
+	}
 	return &player1, &player2
 }
 
@@ -68,21 +73,44 @@ func takeTurn(gameBoard *[3][3]string, player1 *player, player2 *player) [3][3]s
 				break out
 			} 
 			for {
-				fmt.Println(player2.name, "please enter your move as coordinates [x][y]")
-				fmt.Scan(&move[0])
-				fmt.Scan(&move[1])
-				var x = move[0]
-				var y = move[1]
-				if (validMove(move, gameBoard, &x, &y) == true) {
-					gameBoard[x][y] = player2.piece
-					printGameBoard(gameBoard)
-					if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
-						fmt.Println("GAME OVER!")
-						break out
+				// NPC logic
+				if(player2.npc == true) {
+					rand.Seed(time.Now().UnixNano())
+					min := 0
+					max := 2
+					// random number between 0-2 for both x,y.
+					var x = rand.Intn(max - min + 1) + min
+					var y = rand.Intn(max - min + 1) + min
+					if (validMove(move, gameBoard, &x, &y) == true) {
+						fmt.Println("NPC move:", x, y)
+						gameBoard[x][y] = player2.piece
+						printGameBoard(gameBoard)
+						if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
+							fmt.Println("GAME OVER!")
+							break out
+						}
+						break
+					} else {
+						fmt.Println(player2.name, "redo turn.")
 					}
-					break
-				} else {
-					fmt.Println(player2.name, "redo turn.")
+				}
+				if(player2.npc == false) {
+					fmt.Println(player2.name, "please enter your move as coordinates [x][y]")
+					fmt.Scan(&move[0])
+					fmt.Scan(&move[1])
+					var x = move[0]
+					var y = move[1]
+					if (validMove(move, gameBoard, &x, &y) == true) {
+						gameBoard[x][y] = player2.piece
+						printGameBoard(gameBoard)
+						if (gameOver(gameBoard, &move, &x, &y, player1, player2) == true) {
+							fmt.Println("GAME OVER!")
+							break out
+						}
+						break
+					} else {
+						fmt.Println(player2.name, "redo turn.")
+					}
 				}
 			}
 		} else {
