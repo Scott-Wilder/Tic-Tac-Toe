@@ -2,7 +2,8 @@ Tic Tac Toe
 
 Requirements:
 
-- Collect player name (p1, p2)
+- Collect player name (p1, p2, NPC)
+- Play against NPC (type "NPC" on P2 name selection)
 - Create empty 3X3 2d array
 - Print game board
 - Take turn
